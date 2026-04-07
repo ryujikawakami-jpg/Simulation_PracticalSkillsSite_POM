@@ -5,7 +5,7 @@ export default defineConfig({
   timeout: 30_000,
   expect: { timeout: 5_000 },
   use: {
-    baseURL: process.env.BASE_URL || 'http://localhost:8080',
+    baseURL: process.env.BASE_URL || 'https://bookshelf-practice-site.web.app',
     headless: true,
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
