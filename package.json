@@ -1,0 +1,12 @@
+{
+  "name": "bookshelf-practice",
+  "version": "1.0.0",
+  "description": "Playwright E2E テスト練習環境 — BookShelf",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:answers": "npx playwright test --config=playwright.config.ts --test-dir=answers"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0"
+  }
+}
