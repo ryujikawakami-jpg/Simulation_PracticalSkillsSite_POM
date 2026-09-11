@@ -92,5 +92,8 @@ export class BookPage {
    }
 
   // TODO Q5: 書籍のページ数を取得する
-  // async getBookPages(id: number): Promise<string> { ... }
+   async getBookPages(id: number): Promise<string> {
+    const pages = (await this.page.getByTestId(`book-pages-${id}`).textContent())??'';
+    return pages.replace(/\D/g,'');
+   }
 }

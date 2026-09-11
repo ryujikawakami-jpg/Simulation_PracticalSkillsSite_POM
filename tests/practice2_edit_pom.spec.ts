@@ -60,23 +60,38 @@ test('Q4: 書籍ID=2の評価が「5」である', async ({ page }) => {
 });
 
 // Q5: 書籍のページ数を取得できる
-test.fixme('Q5: 書籍ID=1のページ数が「320」である', async ({ page }) => {
+test('Q5: 書籍ID=1のページ数が「320」である', async ({ page }) => {
   // TODO: BookPage.getBookPages() を実装してから使用
   // Act: getBookPages(1)
+  const pages=await bookPage.getBookPages(1);
   // Assert: '320' を含むことを検証
+  expect(pages).toBe('320');
 });
 
 // Q6: 著者「高橋」で絞り込むと2件になる
-test.fixme('Q6: 著者「高橋」で絞り込むと2件になる', async ({ page }) => {
+test('Q6: 著者「高橋」で絞り込むと2件になる', async ({ page }) => {
   // TODO: BookPage.filterByAuthor() を実装してから使用
+  //Act -著者絞り込みをして件数を取得
+  await bookPage.filterByAuthor('高橋');
+  const count = await bookPage.getBookCount();
+  //Assert -2件を検証
+  expect(count).toBe('2');
 });
 
 // Q7: 著者・メモを入力して書籍を追加できる
-test.fixme('Q7: 著者・メモを入力して書籍を追加できる', async ({ page }) => {
+test('Q7: 著者・メモを入力して書籍を追加できる', async ({ page }) => {
   // TODO: BookModal.selectAuthor() と BookModal.fillNote() を実装してから使用
   // Arrange: addBookButton をクリック
+  await bookPage.addBookButton.click();
   // Act: タイトル、ジャンル、著者、メモを入力して保存
+  await bookModal.fillTitle('テストタイトル');
+  await bookModal.selectGenre('fiction');
+  await bookModal.selectAuthor('山田');
+  await bookModal.fillNote('memo');
+  await bookModal.save();
+  const bookCount = await bookPage.getBookCount();
   // Assert: 書籍数が7件になることを検証
+  expect(bookCount).toBe(7);
 });
 
 // Q8: 評価・ページ数を設定して書籍を追加できる
