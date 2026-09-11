@@ -23,31 +23,40 @@ test.beforeEach(async ({ page }) => {
 });
 
 // Q1: 著者フィルターで「山田」を選択すると書籍が絞り込まれる
-test.fixme('Q1: 著者フィルターで「山田」を選択すると書籍が絞り込まれる', async ({ page }) => {
+test('Q1: 著者フィルターで「山田」を選択すると書籍が絞り込まれる', async ({ page }) => {
   // TODO: BookPage.filterByAuthor() を実装してから使用
   // Act: filterByAuthor('山田') → getBookCount()
+  await bookPage.filterByAuthor('山田');
+  const bookCount = await bookPage.getBookCount();
   // Assert: 2件であることを検証
+  expect(bookCount).toBe(2);
 });
 
 // Q2: 書籍の著者名を取得できる
-test.fixme('Q2: 書籍ID=1の著者名が「山田」である', async ({ page }) => {
+test('Q2: 書籍ID=1の著者名が「山田」である', async ({ page }) => {
   // TODO: BookPage.getBookAuthor() を実装してから使用
   // Act: getBookAuthor(1)
+  const bookAuthor = await bookPage.getBookAuthor(1);
   // Assert: '山田' であることを検証
+  expect(bookAuthor).toBe('山田');
 });
 
 // Q3: 書籍のメモを取得できる
-test.fixme('Q3: 書籍ID=1のメモが「初心者におすすめ」である', async ({ page }) => {
+test('Q3: 書籍ID=1のメモが「初心者におすすめ」である', async ({ page }) => {
   // TODO: BookPage.getBookNote() を実装してから使用
   // Act: getBookNote(1)
+  const note = await bookPage.getBookNote(1);
   // Assert: '初心者におすすめ' であることを検証
+  expect(note).toBe('初心者におすすめ');
 });
 
 // Q4: 書籍の評価を取得できる
-test.fixme('Q4: 書籍ID=2の評価が「5」である', async ({ page }) => {
+test('Q4: 書籍ID=2の評価が「5」である', async ({ page }) => {
   // TODO: BookPage.getBookRating() を実装してから使用
   // Act: getBookRating(2)
+  const bookRate = await bookPage.getBookRating(2);
   // Assert: '5' を含むことを検証
+  expect(bookRate).toBe('5');
 });
 
 // Q5: 書籍のページ数を取得できる
