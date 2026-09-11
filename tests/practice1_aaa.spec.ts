@@ -68,20 +68,40 @@ test('Q4: 著者「山田」で絞り込むとテーブルが2件になる', asy
 });
 
 // Q5: 著者「高橋」で絞り込むとテーブルが2件になる
-test.fixme('Q5: 著者「高橋」で絞り込むとテーブルが2件になる', async ({ page }) => {
+test('Q5: 著者「高橋」で絞り込むとテーブルが2件になる', async ({ page }) => {
   // TODO: AAA パターンでテストを書いてください
+  //Arrange -beforeEachで済
+  //Act -著者「高橋」で絞り込み、テーブルの行数を取得
+  await statsPage.filterByAuthor('高橋');
+  const rowCount = await statsPage.getStatsRowCount();
+  //Assert -2件であることを検証
+  expect(rowCount).toBe(2);
+
 });
 
 // Q6: 集計カードの「総冊数」がテーブルの行数と一致する
-test.fixme('Q6: 集計カードの「総冊数」がテーブルの行数と一致する', async ({ page }) => {
-  // TODO: AAA パターンでテストを書いてください
+test('Q6: 集計カードの「総冊数」がテーブルの行数と一致する', async ({ page }) => {
+  // TODO: AAA パターンでテストを書いてください]
+  //Arrange -beforeEach
+  //Act -行数と総冊数を取得
+    const rowCount = await statsPage.getStatsRowCount();
+    const statValues:number =Number( (await statsPage.getStatValues()).total);
   // Hint: getStatValues() と getStatsRowCount() を使う
+  //Assert -行数と総冊数を検証
+    expect(rowCount).toBe(statValues);
 });
 
 // Q7: 全ジャンルで「読了」数が2件になる
-test.fixme('Q7: 全ジャンルで「読了」数が2件になる', async ({ page }) => {
+test('Q7: 全ジャンルで「読了」数が2件になる', async ({ page }) => {
   // TODO: AAA パターンでテストを書いてください
   // Hint: getStatValues().finished を使う
+    //Arrange -beforeEach
+  //Act -ジャンルをすべてにし、読了数を取得
+  await statsPage.filterByGenre('すべて');
+  const statValues:number =Number( (await statsPage.getStatValues()).finished);
+// Hint: getStatValues() と getStatsRowCount() を使う
+//Assert -行数と総冊数を検証
+  expect(statValues).toBe(2);
 });
 
 // Q8: 全ジャンルで「読書中」数が2件になる
