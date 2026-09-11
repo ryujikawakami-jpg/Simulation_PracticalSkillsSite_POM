@@ -17,27 +17,32 @@ let statsPage: StatsPage;
 // - StatsPage に遷移
 test.beforeEach(async ({ page }) => {
   // TODO: ログインして統計ページに遷移する処理を書いてください
-  // loginPage = new LoginPage(page);
-  // statsPage = new StatsPage(page);
-  // await loginPage.goto();
-  // await loginPage.loginAsAdmin();
-  // await statsPage.navigate();
+   loginPage = new LoginPage(page);
+   statsPage = new StatsPage(page);
+   await loginPage.goto();
+   await loginPage.loginAsAdmin();
+   await statsPage.navigate();
 });
 
 // Q1: 全ジャンルで統計テーブルに6件表示される
-test.fixme('Q1: 全ジャンルで統計テーブルに6件表示される', async ({ page }) => {
+test('Q1: 全ジャンルで統計テーブルに6件表示される', async ({ page }) => {
   // TODO: AAA パターンでテストを書いてください
   // Arrange: （beforeEach でセットアップ済み）
   // Act: テーブルの行数を取得
+  const rowCount = await statsPage.getStatsRowCount();
   // Assert: 6件であることを検証
+  await expect(rowCount).toBe(6);
 });
 
 // Q2: ジャンル「tech」で絞り込むとテーブルが2件になる
-test.fixme('Q2: ジャンル「tech」で絞り込むとテーブルが2件になる', async ({ page }) => {
+test('Q2: ジャンル「tech」で絞り込むとテーブルが2件になる', async ({ page }) => {
   // TODO: AAA パターンでテストを書いてください
   // Arrange: （beforeEach でセットアップ済み）
   // Act: ジャンルを「tech」で絞り込み、行数を取得
+  await statsPage.filterByGenre('tech');
+  const rowCount = await statsPage.getStatsRowCount();
   // Assert: 2件であることを検証
+  expect(rowCount).toBe(2);
 });
 
 // Q3: ジャンル「fiction」で絞り込むとテーブルが1件になる
