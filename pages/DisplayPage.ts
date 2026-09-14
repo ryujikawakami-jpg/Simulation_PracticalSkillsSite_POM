@@ -20,7 +20,7 @@ export class DisplayPage {
   readonly animationDisplay : Locator;
   readonly saveButton : Locator;
   readonly resetButton : Locator;
-  readonly successToast : Locator;
+  readonly toast : Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -31,7 +31,7 @@ export class DisplayPage {
     this.animationDisplay = page.getByTestId('display-animation').locator('..');
     this.saveButton = page.getByTestId('save-display-btn');
     this.resetButton = page.getByTestId('reset-display-btn');
-    this.successToast = page.locator('.success-toast');
+    this.toast = page.locator('#toast');
   }
 
   async navigate() {
