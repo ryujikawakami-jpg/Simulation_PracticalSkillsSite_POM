@@ -30,7 +30,7 @@ export class StatsPage {
   }
 
   async getStatsRowCount(): Promise<number> {
-    return await this.statsTable.locator('tbody tr').count();
+    return await this.statsTable.locator('tr').count();
   }
 
   async getStatsRowByBookId(id: number): Promise<Locator> {
