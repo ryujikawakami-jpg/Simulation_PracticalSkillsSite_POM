@@ -30,7 +30,9 @@ export class StatsPage {
   }
 
   async getStatsRowCount(): Promise<number> {
-    return await this.statsTable.locator('tbody tr').count();
+    // data-testid="stats-table" が付いているのは <table> ではなく <tbody> なので、
+    // ここからさらに tbody を探すと 0 件になる
+    return await this.statsTable.locator('tr').count();
   }
 
   async getStatsRowByBookId(id: number): Promise<Locator> {

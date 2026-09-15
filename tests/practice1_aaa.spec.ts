@@ -8,6 +8,13 @@ import { StatsPage } from '../pages/StatsPage';
 // StatsPage POM は完成済みです。
 // 各テストを test.fixme() から test() に変更し、
 // Arrange / Act / Assert のコメント付きでテストを完成させてください。
+//
+// ★ この回は「配布された POM のメソッドを使って書く」練習です。
+//    page.locator(...) をテスト側に直接書かないでください。
+//    行数を数えるなら statsPage.getStatsRowCount()、
+//    絞り込むなら statsPage.filterByGenre() を使います。
+//    直接書くとロケーターがテスト15本に散らばり、画面が変わったとき全部直すことになります。
+//    POM を使う理由は「直す場所を1か所に集めること」です。
 
 let loginPage: LoginPage;
 let statsPage: StatsPage;

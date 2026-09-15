@@ -9,7 +9,12 @@ import { LoginPage } from '../pages/LoginPage';
 //
 // --- DisplayPage に必要な要素 ---
 // ナビゲーション: nav-display
-// トグル（CSS hidden checkbox — locator.evaluate(el => el.click()) で操作）:
+// トグル（CSS で隠れた checkbox。input 自体は visible=false なので直接 click() できない）:
+//   囲っている <label> を掴んで setChecked(true/false) で操作する
+//     page.locator('label:has([data-testid="display-darkmode"])').setChecked(true)
+//   ※ evaluate(el => el.click()) でも動くが、Playwright のチェックを全部飛ばすため
+//     「押せないはずのときも押せてしまう」。テストとしては上の書き方を使うこと
+//   ※ toggle（反転）ではなく setChecked（状態を指定）にすると、実行順に依存しなくなる
 //   - display-darkmode   : ダークモード（デフォルト OFF）
 //   - display-compact    : コンパクト表示（デフォルト ON）
 //   - display-cover      : 表紙表示（デフォルト ON）
