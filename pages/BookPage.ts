@@ -6,12 +6,10 @@ export class BookPage {
   // --- 提供済みロケーター ---
   readonly searchInput: Locator;
   readonly filterGenre: Locator;
+  readonly filterAuthor: Locator;
   readonly addBookButton: Locator;
   readonly bookList: Locator;
   readonly emptyState: Locator;
-
-  // --- TODO: 以下のロケーターを追加してください ---
-  // readonly filterAuthor: Locator;  // test-id: filter-author
 
   constructor(page: Page) {
     this.page = page;
@@ -19,12 +17,11 @@ export class BookPage {
     // 提供済み
     this.searchInput   = page.getByTestId('search-input');
     this.filterGenre   = page.getByTestId('filter-genre');
+    this.filterAuthor  = page.getByTestId('filter-author');
     this.addBookButton = page.getByTestId('add-book-btn');
     this.bookList      = page.getByTestId('book-list');
     this.emptyState    = page.locator('#empty-state');
 
-    // TODO: filterAuthor のロケーターを初期化してください
-    // this.filterAuthor = ???;
   }
 
   // --- 提供済みメソッド ---
@@ -41,6 +38,10 @@ export class BookPage {
     await this.filterGenre.selectOption(genre);
   }
 
+  async filterByAuthor(author: string) {
+    await this.filterAuthor.selectOption(author);
+  }
+
   async getBookCount(): Promise<number> {
     return await this.page.getByTestId('book-card').count();
   }
@@ -49,8 +50,24 @@ export class BookPage {
     return (await this.page.getByTestId(`book-title-${id}`).textContent()) ?? '';
   }
 
+  async getBookAuthor(id: number): Promise<string> {
+    return (await this.page.getByTestId(`book-author-${id}`).textContent()) ?? '';
+  }
+
   async getBookStatus(id: number): Promise<string> {
     return (await this.page.getByTestId(`book-status-${id}`).textContent()) ?? '';
+  }
+
+  async getBookNote(id: number): Promise<string> {
+    return (await this.page.getByTestId(`book-note-${id}`).textContent()) ?? '';
+  }
+
+  async getBookRating(id: number): Promise<string> {
+    return (await this.page.getByTestId(`book-rating-${id}`).textContent()) ?? '';
+  }
+
+  async getBookPages(id: number): Promise<string> {
+    return (await this.page.getByTestId(`book-pages-${id}`).textContent()) ?? '';
   }
 
   async clickEdit(id: number) {
