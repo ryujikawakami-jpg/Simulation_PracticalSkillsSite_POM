@@ -7,7 +7,10 @@ BookShelf（書籍管理サイト）を題材に、POM パターンと AAA パ�
 
 **https://bookshelf-practice-site.web.app**
 
-公開済みなので、ローカルでサーバーを立てる必要はありません。ログインも不要です。
+公開済みなので、ローカルでサーバーを立てる必要はありません。
+
+**テストの中ではログインが必要です。** 各 practice ファイルの `beforeEach` で
+`loginPage.loginAsAdmin()` を呼んでから、対象ページへ遷移してください。
 `playwright.config.ts` の `baseURL` がこのURLを既定にしているので、そのまま `npx playwright test` で動きます。
 
 まずブラウザでこのサイトを開いて触ってみてください。

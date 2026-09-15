@@ -1,7 +1,8 @@
 import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
-  testDir: './tests',
+  // 既定は練習問題。模範解答を動かすときは TEST_DIR=answers（npm run test:answers）
+  testDir: process.env.TEST_DIR || './tests',
   timeout: 30_000,
   expect: { timeout: 5_000 },
   use: {

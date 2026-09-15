@@ -49,8 +49,8 @@ test('Q4: 書籍ID=2の評価が「5」である', async ({ page }) => {
   // Arrange: （beforeEach でセットアップ済み）
   // Act
   const rating = await bookPage.getBookRating(2);
-  // Assert
-  expect(rating).toContain('5');
+  // Assert（評価は数字ではなく星マークで表示される）
+  expect(rating).toBe('★★★★★');
 });
 
 // Q5: 書籍ID=1のページ数が「320」である
@@ -192,5 +192,5 @@ test('Q15: ウィッシュリスト保存後、ステータスが「未読」で
   const status = await bookPage.getBookStatus(7);
   expect(status).toContain('未読');
   const rating = await bookPage.getBookRating(7);
-  expect(rating).toContain('4');
+  expect(rating).toBe('★★★★☆');
 });
