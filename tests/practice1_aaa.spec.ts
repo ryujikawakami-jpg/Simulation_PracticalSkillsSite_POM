@@ -24,96 +24,211 @@ let statsPage: StatsPage;
 // - StatsPage に遷移
 test.beforeEach(async ({ page }) => {
   // TODO: ログインして統計ページに遷移する処理を書いてください
-  // loginPage = new LoginPage(page);
-  // statsPage = new StatsPage(page);
-  // await loginPage.goto();
-  // await loginPage.loginAsAdmin();
-  // await statsPage.navigate();
+  loginPage = new LoginPage(page);
+  statsPage = new StatsPage(page);
+  await loginPage.goto();
+  await loginPage.loginAsAdmin();
+  await statsPage.navigate();
 });
 
 // Q1: 全ジャンルで統計テーブルに6件表示される
-test.fixme('Q1: 全ジャンルで統計テーブルに6件表示される', async ({ page }) => {
+test('Q1: 全ジャンルで統計テーブルに6件表示される', async ({ page }) => {
   // TODO: AAA パターンでテストを書いてください
   // Arrange: （beforeEach でセットアップ済み）
+
   // Act: テーブルの行数を取得
+  const allRowCount:number = await statsPage.getStatsRowCount();
+
   // Assert: 6件であることを検証
+  expect(allRowCount).toBe(6);
 });
 
 // Q2: ジャンル「tech」で絞り込むとテーブルが2件になる
-test.fixme('Q2: ジャンル「tech」で絞り込むとテーブルが2件になる', async ({ page }) => {
+test('Q2: ジャンル「tech」で絞り込むとテーブルが2件になる', async ({ page }) => {
   // TODO: AAA パターンでテストを書いてください
   // Arrange: （beforeEach でセットアップ済み）
+
   // Act: ジャンルを「tech」で絞り込み、行数を取得
+  await statsPage.filterByGenre('tech');
+  const techRowCount:number = await statsPage.getStatsRowCount();
+
   // Assert: 2件であることを検証
+  expect(techRowCount).toBe(2);
 });
 
 // Q3: ジャンル「fiction」で絞り込むとテーブルが1件になる
-test.fixme('Q3: ジャンル「fiction」で絞り込むとテーブルが1件になる', async ({ page }) => {
+test('Q3: ジャンル「fiction」で絞り込むとテーブルが1件になる', async ({ page }) => {
   // TODO: AAA パターンでテストを書いてください
+  // Arrange: （beforeEach でセットアップ済み）
+
+  // Act: ジャンルを「fiction」で絞り込み、行数を取得
+  await statsPage.filterByGenre('fiction');
+  const fictionRowCount:number = await statsPage.getStatsRowCount();
+
+  // Assert: 1件であることを検証
+  expect(fictionRowCount).toBe(1);
 });
 
 // Q4: 著者「山田」で絞り込むとテーブルが2件になる
-test.fixme('Q4: 著者「山田」で絞り込むとテーブルが2件になる', async ({ page }) => {
+test('Q4: 著者「山田」で絞り込むとテーブルが2件になる', async ({ page }) => {
   // TODO: AAA パターンでテストを書いてください
+  // Arrange: （beforeEach でセットアップ済み）
+
+  // Act: 著者を「山田」で絞り込み、行数を取得
+  await statsPage.filterByAuthor('山田');
+  const yamadaRowCount:number = await statsPage.getStatsRowCount();
+
+  // Assert: 2件であることを検証
+  expect(yamadaRowCount).toBe(2);
 });
 
 // Q5: 著者「高橋」で絞り込むとテーブルが2件になる
-test.fixme('Q5: 著者「高橋」で絞り込むとテーブルが2件になる', async ({ page }) => {
+test('Q5: 著者「高橋」で絞り込むとテーブルが2件になる', async ({ page }) => {
   // TODO: AAA パターンでテストを書いてください
+  // Arrange: （beforeEach でセットアップ済み）
+
+  // Act: 著者を「高橋」で絞り込み、行数を取得
+  await statsPage.filterByAuthor('高橋');
+  const takahashiRowCount:number = await statsPage.getStatsRowCount();
+
+  // Assert: 2件であることを検証
+  expect(takahashiRowCount).toBe(2);
 });
 
 // Q6: 集計カードの「総冊数」がテーブルの行数と一致する
-test.fixme('Q6: 集計カードの「総冊数」がテーブルの行数と一致する', async ({ page }) => {
+test('Q6: 集計カードの「総冊数」がテーブルの行数と一致する', async ({ page }) => {
   // TODO: AAA パターンでテストを書いてください
   // Hint: getStatValues() と getStatsRowCount() を使う
+  // Arrange: （beforeEach でセットアップ済み）
+
+  // Act: 総冊数と行数を取得
+  const totalValue:string = (await statsPage.getStatValues()).total;
+  const BookRowCount:number = await statsPage.getStatsRowCount();
+
+  // Assert: 総冊数と行数を比較して、一致することを検証
+  expect(BookRowCount).toBe(Number(totalValue));
 });
 
 // Q7: 全ジャンルで「読了」数が2件になる
-test.fixme('Q7: 全ジャンルで「読了」数が2件になる', async ({ page }) => {
+test('Q7: 全ジャンルで「読了」数が2件になる', async ({ page }) => {
   // TODO: AAA パターンでテストを書いてください
   // Hint: getStatValues().finished を使う
+  // Arrange: （beforeEach でセットアップ済み）
+
+  // Act: 読了数を取得
+  const finishValue:string = (await statsPage.getStatValues()).finished;
+
+  // Assert: 2件であることを検証
+  expect(Number(finishValue)).toBe(2);
 });
 
 // Q8: 全ジャンルで「読書中」数が2件になる
-test.fixme('Q8: 全ジャンルで「読書中」数が2件になる', async ({ page }) => {
+test('Q8: 全ジャンルで「読書中」数が2件になる', async ({ page }) => {
   // TODO: AAA パターンでテストを書いてください
+  // Arrange: （beforeEach でセットアップ済み）
+
+  // Act: 読書中数を取得
+  const readingValue:string = (await statsPage.getStatValues()).reading;
+
+  // Assert: 2件であることを検証
+  expect(Number(readingValue)).toBe(2);
 });
 
 // Q9: 全ジャンルで「未読」数が2件になる
-test.fixme('Q9: 全ジャンルで「未読」数が2件になる', async ({ page }) => {
+test('Q9: 全ジャンルで「未読」数が2件になる', async ({ page }) => {
   // TODO: AAA パターンでテストを書いてください
+  // Arrange: （beforeEach でセットアップ済み）
+
+  // Act: 未読数を取得
+  const unreadValue:string = (await statsPage.getStatValues()).unread;
+
+  // Assert: 2件であることを検証
+  expect(Number(unreadValue)).toBe(2);
 });
 
 // Q10: ジャンル「tech」＋著者「山田」で絞り込むと1件になる
-test.fixme('Q10: ジャンル「tech」＋著者「山田」で絞り込むと1件になる', async ({ page }) => {
+test('Q10: ジャンル「tech」＋著者「山田」で絞り込むと1件になる', async ({ page }) => {
   // TODO: AAA パターンでテストを書いてください
   // Hint: filterByGenre と filterByAuthor を両方使う
+  // Arrange: （beforeEach でセットアップ済み）
+
+  // Act: ジャンルをtech、著者を山田で絞り込み、行数を取得
+  await statsPage.filterByGenre('tech');
+  await statsPage.filterByAuthor('山田');
+  const techYamadaRowCount:number = await statsPage.getStatsRowCount();
+
+  // Assert: 1件であることを検証
+  expect(techYamadaRowCount).toBe(1);
 });
 
 // Q11: ジャンル「manga」で絞り込むと1件になる
-test.fixme('Q11: ジャンル「manga」で絞り込むと1件になる', async ({ page }) => {
+test('Q11: ジャンル「manga」で絞り込むと1件になる', async ({ page }) => {
   // TODO: AAA パターンでテストを書いてください
+  // Arrange: （beforeEach でセットアップ済み）
+
+  // Act: ジャンルをmangaで絞り込み、行数を取得
+  await statsPage.filterByGenre('manga');
+  const mangaRowCount:number = await statsPage.getStatsRowCount();
+
+  // Assert: 1件であることを検証
+  expect(mangaRowCount).toBe(1);
 });
 
 // Q12: エクスポートボタンをクリックするとトーストが表示される
-test.fixme('Q12: エクスポートボタンをクリックするとトーストが表示される', async ({ page }) => {
+test('Q12: エクスポートボタンをクリックするとトーストが表示される', async ({ page }) => {
   // TODO: AAA パターンでテストを書いてください
   // Hint: exportStats() を呼んだ後、トーストメッセージを検証
   // トーストメッセージ: "エクスポートしました（CSV）"
+  // Arrange: （beforeEach でセットアップ済み）
+
+  // Act: エクスポートボタンをクリック
+  await statsPage.exportStats();
+
+  // Assert: トーストメッセージが出現し、"エクスポートしました（CSV）"と表示されるか検証
+  await expect(page.getByText('エクスポートしました（CSV）')).toBeVisible();
 });
 
 // Q13: ジャンル「non-fiction」で絞り込むと2件になる
-test.fixme('Q13: ジャンル「non-fiction」で絞り込むと2件になる', async ({ page }) => {
+test('Q13: ジャンル「non-fiction」で絞り込むと2件になる', async ({ page }) => {
   // TODO: AAA パターンでテストを書いてください
+  // Arrange: （beforeEach でセットアップ済み）
+
+  // Act: ジャンルをnon-fictionで絞り込み、行数を取得
+  await statsPage.filterByGenre('non-fiction');
+  const nonfictionRowCount:number = await statsPage.getStatsRowCount();
+
+  // Assert: 2件であることを検証
+  expect(nonfictionRowCount).toBe(2);
 });
 
 // Q14: 著者「中村」で絞り込むと1件になる
-test.fixme('Q14: 著者「中村」で絞り込むと1件になる', async ({ page }) => {
+test('Q14: 著者「中村」で絞り込むと1件になる', async ({ page }) => {
   // TODO: AAA パターンでテストを書いてください
+  // Arrange: （beforeEach でセットアップ済み）
+
+  // Act: 著者を「中村」で絞り込み、行数を取得
+  await statsPage.filterByAuthor('中村');
+  const nakamuraRowCount:number = await statsPage.getStatsRowCount();
+
+  // Assert: 1件であることを検証
+  expect(nakamuraRowCount).toBe(1);
 });
 
 // Q15: ジャンル「all」に戻すとテーブルが6件に戻る
-test.fixme('Q15: ジャンル「all」に戻すとテーブルが6件に戻る', async ({ page }) => {
+test('Q15: ジャンル「all」に戻すとテーブルが6件に戻る', async ({ page }) => {
   // TODO: AAA パターンでテストを書いてください
   // Hint: まず別のジャンルで絞り込んでから「all」に戻す
+  // Arrange: （beforeEach でセットアップ済み）
+
+  // Act: ジャンルをnon-fictionで絞り込み、6件ではないことを確認
+  await statsPage.filterByGenre('non-fiction');
+  const nonfictionRowCount:number = await statsPage.getStatsRowCount();
+  expect(nonfictionRowCount).not.toBe(6);
+
+  // ジャンルをallに戻し、行数を取得する
+  await statsPage.filterByGenre('all');
+  const allRowCount:number = await statsPage.getStatsRowCount();
+
+  // Assert: 6件であることを検証
+  expect(allRowCount).toBe(6);
 });
