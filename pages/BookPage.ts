@@ -11,7 +11,7 @@ export class BookPage {
   readonly emptyState: Locator;
 
   // --- TODO: 以下のロケーターを追加してください ---
-  // readonly filterAuthor: Locator;  // test-id: filter-author
+  readonly filterAuthor: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -24,7 +24,9 @@ export class BookPage {
     this.emptyState    = page.locator('#empty-state');
 
     // TODO: filterAuthor のロケーターを初期化してください
-    // this.filterAuthor = ???;
+
+    this.filterAuthor  = page.getByTestId('filter-author');
+ 
   }
 
   // --- 提供済みメソッド ---
@@ -68,17 +70,33 @@ export class BookPage {
   // --- TODO: 以下のメソッドを実装してください ---
 
   // TODO Q1: 著者フィルターで絞り込む
-  // async filterByAuthor(author: string) { ... }
+
+  async filterByAuthor(author: string) {
+    await this.filterAuthor.selectOption(author);
+  }
+
 
   // TODO Q2: 書籍の著者名を取得する
-  // async getBookAuthor(id: number): Promise<string> { ... }
+
+  async getBookAuthor(id: number): Promise<string> {
+    return (await this.page.getByTestId(`book-author-${id}`).textContent()) ?? '';
+  } 
 
   // TODO Q3: 書籍のメモを取得する
-  // async getBookNote(id: number): Promise<string> { ... }
+  
+  async getBookNote(id: number): Promise<string> {
+    return (await this.page.getByTestId(`book-note-${id}`).textContent()) ?? '';
+  }
 
   // TODO Q4: 書籍の評価を取得する
-  // async getBookRating(id: number): Promise<string> { ... }
+
+  async getBookRating(id: number): Promise<string> {
+    return (await this.page.getByTestId(`book-rating-${id}`).textContent()) ?? '';
+  }
 
   // TODO Q5: 書籍のページ数を取得する
-  // async getBookPages(id: number): Promise<string> { ... }
+
+  async getBookPages(id: number): Promise<string> {
+    return (await this.page.getByTestId(`book-pages-${id}`).textContent()) ?? '';
+  }
 }

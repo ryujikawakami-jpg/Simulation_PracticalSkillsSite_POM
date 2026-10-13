@@ -74,5 +74,5 @@ PRの説明に「どの問題を解いたか」「詰まった箇所」を書い
 別のURLに対して実行したいときは `BASE_URL` を渡します。
 
 ```bash
-BASE_URL=http://localhost:8080 npx playwright test
+BASE_URL=https://bookshelf-practice-site.web.app/ npx playwright test
 ```
