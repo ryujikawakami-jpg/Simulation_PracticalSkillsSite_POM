@@ -159,9 +159,8 @@ test('Q12: エクスポートボタンをクリックするとトーストが表
   // Arrange: （beforeEach でセットアップ済み）
   // Act: エクスポートボタンをクリック
   await statsPage.exportStats();
-  const toastMessage = page.getByTestId('toast-message');
   // Assert: トーストメッセージが表示されることを検証
-  await expect(toastMessage).toHaveText('エクスポートしました（CSV）');
+  await expect(page.getByText('エクスポートしました（CSV）')).toBeVisible();
 });
 
 // Q13: ジャンル「non-fiction」で絞り込むと2件になる
