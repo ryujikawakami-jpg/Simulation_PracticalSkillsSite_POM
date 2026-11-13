@@ -5,7 +5,7 @@ BookShelf（書籍管理サイト）を題材に、POM パターンと AAA パ�
 
 ## テスト対象サイト
 
-**https://bookshelf-practice-site.web.app**
+**https://ssi-bookshelf-practice.web.app**
 
 公開済みなので、ローカルでサーバーを立てる必要はありません。
 
