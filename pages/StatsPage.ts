@@ -7,6 +7,7 @@ export class StatsPage {
   readonly exportButton: Locator;
   readonly statsGrid: Locator;
   readonly statsTable: Locator;
+  readonly exportMassage: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -15,6 +16,7 @@ export class StatsPage {
     this.exportButton = page.getByTestId('stats-export-btn');
     this.statsGrid    = page.locator('#stats-grid');
     this.statsTable   = page.getByTestId('stats-table');
+    this.exportMassage= page.getByText('エクスポートしました（CSV）',{ exact:true});
   }
 
   async navigate() {
@@ -52,4 +54,5 @@ export class StatsPage {
   async exportStats() {
     await this.exportButton.click();
   }
+
 }
