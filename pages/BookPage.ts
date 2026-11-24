@@ -2,83 +2,64 @@ import { Page, Locator } from '@playwright/test';
 
 export class BookPage {
   readonly page: Page;
-
-  // --- 提供済みロケーター ---
-  readonly searchInput: Locator;
   readonly filterGenre: Locator;
+  readonly filterAuthor: Locator;
   readonly addBookButton: Locator;
-  readonly bookList: Locator;
-  readonly emptyState: Locator;
-
-  // --- TODO: 以下のロケーターを追加してください ---
-  // readonly filterAuthor: Locator;  // test-id: filter-author
 
   constructor(page: Page) {
     this.page = page;
-
-    // 提供済み
-    this.searchInput   = page.getByTestId('search-input');
     this.filterGenre   = page.getByTestId('filter-genre');
+    this.filterAuthor  = page.getByTestId('filter-author');
     this.addBookButton = page.getByTestId('add-book-btn');
-    this.bookList      = page.getByTestId('book-list');
-    this.emptyState    = page.locator('#empty-state');
-
-    // TODO: filterAuthor のロケーターを初期化してください
-    // this.filterAuthor = ???;
   }
 
-  // --- 提供済みメソッド ---
-
+  // 書籍一覧ページへ遷移する
   async navigate() {
     await this.page.getByTestId('nav-books').click();
   }
 
-  async search(keyword: string) {
-    await this.searchInput.fill(keyword);
+  // 書籍追加モーダルを開く
+  async openAddModal() {
+    await this.addBookButton.click();
   }
 
+  // ジャンルフィルターで書籍を絞り込む
   async filterByGenre(genre: string) {
     await this.filterGenre.selectOption(genre);
   }
 
+  // 著者フィルターで書籍を絞り込む
+  async filterByAuthor(author: string) {
+    await this.filterAuthor.selectOption(author);
+  }
+
+  // 表示されている書籍の件数を取得する
   async getBookCount(): Promise<number> {
     return await this.page.getByTestId('book-card').count();
   }
 
-  async getBookTitle(id: number): Promise<string> {
-    return (await this.page.getByTestId(`book-title-${id}`).textContent()) ?? '';
+  // 指定IDの書籍ステータス要素を取得する
+  getBookStatusLocator(id: number): Locator {
+    return this.page.getByTestId(`book-status-${id}`);
   }
 
-  async getBookStatus(id: number): Promise<string> {
-    return (await this.page.getByTestId(`book-status-${id}`).textContent()) ?? '';
+  // 指定IDの書籍の著者名要素を取得する
+  getBookAuthorLocator(id: number): Locator {
+    return this.page.getByTestId(`book-author-${id}`);
   }
 
-  async clickEdit(id: number) {
-    await this.page.getByTestId(`edit-btn-${id}`).click();
+  // 指定IDの書籍のメモ要素を取得する
+  getBookNoteLocator(id: number): Locator {
+    return this.page.getByTestId(`book-note-${id}`);
   }
 
-  async clickDelete(id: number) {
-    await this.page.getByTestId(`delete-btn-${id}`).click();
+  // 指定IDの書籍の評価要素を取得する
+  getBookRatingLocator(id: number): Locator {
+    return this.page.getByTestId(`book-rating-${id}`);
   }
 
-  async confirmDelete() {
-    await this.page.getByRole('button', { name: '削除' }).click();
+  // 指定IDの書籍のページ数要素を取得する
+  getBookPagesLocator(id: number): Locator {
+    return this.page.getByTestId(`book-pages-${id}`);
   }
-
-  // --- TODO: 以下のメソッドを実装してください ---
-
-  // TODO Q1: 著者フィルターで絞り込む
-  // async filterByAuthor(author: string) { ... }
-
-  // TODO Q2: 書籍の著者名を取得する
-  // async getBookAuthor(id: number): Promise<string> { ... }
-
-  // TODO Q3: 書籍のメモを取得する
-  // async getBookNote(id: number): Promise<string> { ... }
-
-  // TODO Q4: 書籍の評価を取得する
-  // async getBookRating(id: number): Promise<string> { ... }
-
-  // TODO Q5: 書籍のページ数を取得する
-  // async getBookPages(id: number): Promise<string> { ... }
 }
