@@ -144,10 +144,10 @@ test('Q7: 全トグルをONにしてリセットすると初期値に戻る', as
   const displayPage = new DisplayPage(page);
   await displayPage.navigate();
   await displayPage.setDarkmode(true);
-  await displayPage.compactToggle.setChecked(true);
-  await displayPage.coverToggle.setChecked(true);
-  await displayPage.ratingToggle.setChecked(true);
-  await displayPage.animationToggle.setChecked(true);
+  await displayPage.setCompact(true);
+  await displayPage.setCover(true);
+  await displayPage.setRating(true);
+  await displayPage.setAnimation(true);
   await displayPage.save();
   // Act: reset()
   await displayPage.reset();

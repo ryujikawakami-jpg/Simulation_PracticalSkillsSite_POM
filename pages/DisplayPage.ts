@@ -12,6 +12,9 @@ export class DisplayPage {
   readonly resetButton: Locator;
   readonly darkmodeCheckbox: Locator;
   readonly animationToggle: Locator;
+  readonly compactLabel: Locator;
+  readonly coverLabel: Locator;
+  readonly ratingLabel: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -26,8 +29,10 @@ export class DisplayPage {
     this.ratingToggle = page.getByTestId('display-rating');
     this.resetButton = page.getByTestId('reset-display-btn');
     this.darkmodeCheckbox = page.getByTestId('display-darkmode');
-    this.animationToggle = page.locator('label:has([data-testid="display-animation"])')
-    this.compactLabel = page.locator('label:has([data-testid="display-compact"])')
+    this.animationToggle = page.locator('label:has([data-testid="display-animation"])');
+    this.compactLabel = page.locator('label:has([data-testid="display-compact"])');
+    this.coverLabel = page.locator('label:has([data-testid="display-cover"])');
+    this.ratingLabel = page.locator('label:has([data-testid="display-rating"])');
   }
 
   async navigate() {
@@ -59,10 +64,6 @@ async setCover(checked: boolean) {
 
 async setRating(checked: boolean) {
   await this.ratingLabel.setChecked(checked);
-}
-
-async setCompact(checked: boolean) {
-  await this.compactLabel.setChecked(checked);
 }
 
 }
