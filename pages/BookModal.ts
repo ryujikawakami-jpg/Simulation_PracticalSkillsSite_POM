@@ -11,6 +11,13 @@ export class BookModal {
   readonly cancelButton: Locator;
   readonly closeButton: Locator;
   readonly titleError: Locator;
+  readonly authorSelect: Locator;
+  readonly ratingSelect: Locator;
+  readonly pagesInput: Locator;
+  readonly noteInput: Locator;
+  readonly wishlistButton: Locator;
+
+  
 
   // --- TODO: 以下のロケーターを追加してください ---
   // readonly authorSelect: Locator;    // test-id: book-author-input
@@ -30,6 +37,11 @@ export class BookModal {
     this.cancelButton = page.locator('#modal-cancel');
     this.closeButton  = page.locator('#modal-close');
     this.titleError   = page.locator('#book-title-error');
+    this.authorSelect = page.getByTestId('book-author-input');
+    this.ratingSelect = page.getByTestId('book-rating-input');
+    this.pagesInput   = page.getByTestId('book-pages-input');
+    this.noteInput    = page.getByTestId('book-note-input');
+    this.wishlistButton = page.getByTestId('modal-wishlist');
 
     // TODO: 以下のロケーターを初期化してください
     // this.authorSelect  = ???;
@@ -41,7 +53,7 @@ export class BookModal {
 
   // --- 提供済みメソッド ---
 
-  async fillTitle(title: string) {
+  async fillTitle(title: string = 'ポケモン') {
     await this.titleInput.fill(title);
   }
 
@@ -69,16 +81,31 @@ export class BookModal {
 
   // TODO Q1: 著者を選択する
   // async selectAuthor(author: string) { ... }
+  async selectAuthor(author: string){
+    await this.authorSelect.selectOption(author);
+  }
 
   // TODO Q2: 評価を選択する（1〜5）
   // async selectRating(rating: number) { ... }
-
+ async selectRating(rating: number = 5){
+    await this.ratingSelect.selectOption(String(rating));
+  }
+ 
   // TODO Q3: ページ数を入力する
   // async fillPages(pages: string) { ... }
+  async fillPages(pages: string = '50'){
+    await this.pagesInput.fill(pages);
+  }
 
   // TODO Q4: メモを入力する
   // async fillNote(note: string) { ... }
+  async fillNote(note: string = 'マサラタウン'){
+    await this.noteInput.fill(note);
+  }
 
   // TODO Q5: ウィッシュリストとして保存する（ステータスが強制的に「未読」になる）
   // async saveWishlist() { ... }
+  async saveWishlist(){
+    await this.wishlistButton.click();
+  }
 }
