@@ -1,166 +1,221 @@
 import { test, expect } from '@playwright/test';
 import { LoginPage } from '../pages/LoginPage';
-
-// ============================================================
-// Practice 3: POM 新規作成 — DisplayPage / EmailPage
-// ============================================================
-// DisplayPage.ts と EmailPage.ts を新規作成してから、
-// 各テストを test.fixme() → test() に変更してテストを完成させてください。
-//
-// --- DisplayPage に必要な要素 ---
-// ナビゲーション: nav-display
-// トグル（CSS で隠れた checkbox。input 自体は visible=false なので直接 click() できない）:
-//   囲っている <label> を掴んで setChecked(true/false) で操作する
-//     page.locator('label:has([data-testid="display-darkmode"])').setChecked(true)
-//   ※ evaluate(el => el.click()) でも動くが、Playwright のチェックを全部飛ばすため
-//     「押せないはずのときも押せてしまう」。テストとしては上の書き方を使うこと
-//   ※ toggle（反転）ではなく setChecked（状態を指定）にすると、実行順に依存しなくなる
-//   - display-darkmode   : ダークモード（デフォルト OFF）
-//   - display-compact    : コンパクト表示（デフォルト ON）
-//   - display-cover      : 表紙表示（デフォルト ON）
-//   - display-rating     : 評価表示（デフォルト ON）
-//   - display-animation  : アニメーション（デフォルト OFF）
-// ボタン:
-//   - save-display-btn   : 保存 → トースト "表示設定を保存しました"
-//   - reset-display-btn  : リセット → デフォルトに戻る
-//
-// --- EmailPage に必要な要素 ---
-// ナビゲーション: nav-email
-// フィールド:
-//   - email-current   : 現在のメール（readonly, "admin@example.com"）
-//   - email-new       : 新しいメールアドレス
-//   - email-confirm   : 確認用メールアドレス
-//   - email-password  : パスワード
-// エラー:
-//   - #email-new-error      : "正しいメールアドレスを入力してください"
-//   - #email-confirm-error  : "メールアドレスが一致しません"
-//   - #email-password-error : "パスワードを入力してください"
-//   - #email-password-wrong : "パスワードが正しくありません"
-// ボタン:
-//   - save-email-btn   : 保存 → トースト "メールアドレスを変更しました" + フィールドクリア
-//   - cancel-email-btn : キャンセル → 全フィールドクリア
+import { DisplayPage } from '../pages/DisplayPage';
+import { EmailPage } from '../pages/EmailPage';
 
 let loginPage: LoginPage;
+let displayPage: DisplayPage;
+let emailPage: EmailPage;
 
 test.beforeEach(async ({ page }) => {
   loginPage = new LoginPage(page);
+  displayPage = new DisplayPage(page);
+  emailPage = new EmailPage(page);
   await loginPage.goto();
   await loginPage.loginAsAdmin();
 });
 
-// ========================
-// 表示設定（Display Settings）Q1〜Q8
-// ========================
+// 表示設定
 
-// Q1: 表示設定ページに遷移できる
-test.fixme('Q1: 表示設定ページに遷移できる', async ({ page }) => {
-  // TODO: DisplayPage POM を作成して使用
-  // Act: DisplayPage.navigate()
-  // Assert: ページ内にトグルが表示されていることを検証
+test('Q1: 表示設定ページに遷移できる', async () => {
+  // Arrange: beforeEachでログインを行う
+
+  // Act: 表示設定ページへ移動する
+  await displayPage.navigate();
+
+  // Assert: ダークモードの操作ラベルが表示されることを検証する
+  await expect(displayPage.darkModeLabel).toBeVisible();
 });
 
-// Q2: デフォルトでコンパクト表示・表紙表示・評価表示がONになっている
-test.fixme('Q2: デフォルトでコンパクト表示・表紙表示・評価表示がONになっている', async ({ page }) => {
-  // TODO: DisplayPage POM を作成して使用
-  // Act: navigate()
-  // Assert: compact, cover, rating が checked であることを検証
+test('Q2: デフォルトでコンパクト表示・表紙表示・評価表示がONになっている', async () => {
+  // Arrange: beforeEachでログインを行う
+
+  // Act: 表示設定ページへ移動する
+  await displayPage.navigate();
+
+  // Assert: 初期トグル状態を検証する
+  await expect(displayPage.compactToggle).toBeChecked();
+  await expect(displayPage.coverToggle).toBeChecked();
+  await expect(displayPage.ratingToggle).toBeChecked();
+  await expect(displayPage.darkModeToggle).not.toBeChecked();
+  await expect(displayPage.animationToggle).not.toBeChecked();
 });
 
-// Q3: ダークモードトグルをONにして保存できる
-test.fixme('Q3: ダークモードトグルをONにして保存できる', async ({ page }) => {
-  // TODO: DisplayPage POM を作成して使用
-  // Act: navigate() → darkmode トグルをクリック → save()
-  // Assert: トースト "表示設定を保存しました" が表示される
+test('Q3: ダークモードをONにして保存できる', async () => {
+  // Arrange: 表示設定ページを開く
+  await displayPage.navigate();
+
+  // Act: ダークモードをONにして保存する
+  await displayPage.setDarkMode(true);
+  await displayPage.save();
+
+  // Assert: 保存完了のトーストが表示されることを検証する
+  await expect(displayPage.saveToast).toBeVisible();
 });
 
-// Q4: リセットするとトグルが初期状態に戻る
-test.fixme('Q4: リセットするとトグルが初期状態に戻る', async ({ page }) => {
-  // TODO: DisplayPage POM を作成して使用
-  // Arrange: navigate() → darkmode をON → save()
-  // Act: reset()
-  // Assert: darkmode が OFF、compact/cover/rating が ON
+test('Q4: リセットするとトグルが初期状態に戻る', async () => {
+  // Arrange: 表示設定を開き、ダークモードをONにして保存する
+  await displayPage.navigate();
+  await displayPage.setDarkMode(true);
+  await displayPage.save();
+
+  // Act: 表示設定を初期状態に戻す
+  await displayPage.reset();
+
+  // Assert: すべてのトグルが初期状態であることを検証する
+  await expect(displayPage.darkModeToggle).not.toBeChecked();
+  await expect(displayPage.compactToggle).toBeChecked();
+  await expect(displayPage.coverToggle).toBeChecked();
+  await expect(displayPage.ratingToggle).toBeChecked();
+  await expect(displayPage.animationToggle).not.toBeChecked();
 });
 
-// Q5: トグルをONにして保存後、ページを再表示しても設定が保持されている
-test.fixme('Q5: 保存した設定がページ遷移後も保持される', async ({ page }) => {
-  // TODO: DisplayPage POM を作成して使用
-  // Arrange: navigate() → darkmode をON → save()
-  // Act: 別ページに遷移 → 再度 navigate()
-  // Assert: darkmode が ON のままであることを検証
+test('Q5: 保存した設定がページ遷移後も保持される', async () => {
+  // Arrange: ダークモードをONにして保存する
+  await displayPage.navigate();
+  await displayPage.setDarkMode(true);
+  await displayPage.save();
+
+  // Act: 書籍一覧へ移動してから表示設定ページを再度開く
+  await displayPage.navigateToBooks();
+  await displayPage.navigate();
+
+  // Assert: ダークモードがONのまま保持されることを検証する
+  await expect(displayPage.darkModeToggle).toBeChecked();
 });
 
-// Q6: アニメーショントグルをONにして保存できる
-test.fixme('Q6: アニメーショントグルをONにして保存できる', async ({ page }) => {
-  // TODO: DisplayPage POM を作成して使用
-  // Act: navigate() → animation トグルをクリック → save()
-  // Assert: トースト "表示設定を保存しました" が表示される
+test('Q6: アニメーションをONにして保存できる', async () => {
+  // Arrange: 表示設定ページを開く
+  await displayPage.navigate();
+
+  // Act: アニメーションをONにして保存する
+  await displayPage.setAnimation(true);
+  await displayPage.save();
+
+  // Assert: 保存完了のトーストが表示されることを検証する
+  await expect(displayPage.saveToast).toBeVisible();
 });
 
-// Q7: 全トグルをONにしてリセットすると初期値に戻る
-test.fixme('Q7: 全トグルをONにしてリセットすると初期値に戻る', async ({ page }) => {
-  // TODO: DisplayPage POM を作成して使用
-  // Arrange: navigate() → 全トグルをON → save()
-  // Act: reset()
-  // Assert: darkmode=OFF, compact=ON, cover=ON, rating=ON, animation=OFF
+test('Q7: 全トグルをONにしてリセットすると初期値に戻る', async () => {
+  // Arrange: 表示設定を開き、全トグルをONにして保存する
+  await displayPage.navigate();
+  await displayPage.setDarkMode(true);
+  await displayPage.setCompact(true);
+  await displayPage.setCover(true);
+  await displayPage.setRating(true);
+  await displayPage.setAnimation(true);
+  await displayPage.save();
+
+  // Act: 表示設定を初期状態に戻す
+  await displayPage.reset();
+
+  // Assert: すべてのトグルが初期値に戻ったことを検証する
+  await expect(displayPage.darkModeToggle).not.toBeChecked();
+  await expect(displayPage.compactToggle).toBeChecked();
+  await expect(displayPage.coverToggle).toBeChecked();
+  await expect(displayPage.ratingToggle).toBeChecked();
+  await expect(displayPage.animationToggle).not.toBeChecked();
 });
 
-// Q8: コンパクト表示をOFFにして保存できる
-test.fixme('Q8: コンパクト表示をOFFにして保存できる', async ({ page }) => {
-  // TODO: DisplayPage POM を作成して使用
-  // Act: navigate() → compact トグルをクリック（OFF にする）→ save()
-  // Assert: トーストが表示され、compact が OFF であることを検証
+test('Q8: コンパクト表示をOFFにして保存できる', async () => {
+  // Arrange: 表示設定ページを開く
+  await displayPage.navigate();
+
+  // Act: コンパクト表示をOFFにして保存する
+  await displayPage.setCompact(false);
+  await displayPage.save();
+
+  // Assert: 保存完了のトーストとOFF状態を検証する
+  await expect(displayPage.saveToast).toBeVisible();
+  await expect(displayPage.compactToggle).not.toBeChecked();
 });
 
-// ========================
-// メールアドレス変更（Email Change）Q9〜Q15
-// ========================
+// メールアドレス変更
 
-// Q9: メールアドレス変更ページに遷移できる
-test.fixme('Q9: メールアドレス変更ページに遷移できる', async ({ page }) => {
-  // TODO: EmailPage POM を作成して使用
-  // Act: EmailPage.navigate()
-  // Assert: 現在のメールが "admin@example.com" であることを検証
+test('Q9: メールアドレス変更ページに遷移できる', async () => {
+  // Arrange: beforeEachでログインを行う
+
+  // Act: メールアドレス変更ページへ移動する
+  await emailPage.navigate();
+
+  // Assert: 現在のメールアドレスが管理者のものと一致することを検証する
+  await expect(emailPage.currentEmail).toHaveValue('admin@example.com');
 });
 
-// Q10: 正しい情報を入力してメールアドレスを変更できる
-test.fixme('Q10: 正しい情報を入力してメールアドレスを変更できる', async ({ page }) => {
-  // TODO: EmailPage POM を作成して使用
-  // Act: navigate() → 新メール・確認・パスワードを入力 → save()
-  // Assert: トースト "メールアドレスを変更しました" が表示される
+test('Q10: 正しい情報を入力してメールアドレスを変更できる', async () => {
+  // Arrange: メールアドレス変更ページを開く
+  await emailPage.navigate();
+
+  // Act: 有効な新しいメールアドレスとパスワードで送信する
+  await emailPage.submitEmailChange('new@example.com', 'new@example.com', 'password');
+
+  // Assert: 変更完了のトーストと入力欄のクリアを検証する
+  await expect(emailPage.saveToast).toBeVisible();
+  await expect(emailPage.newEmailInput).toHaveValue('');
+  await expect(emailPage.confirmEmailInput).toHaveValue('');
+  await expect(emailPage.passwordInput).toHaveValue('');
 });
 
-// Q11: 何も入力せず変更ボタンを押すとエラーが表示される
-test.fixme('Q11: 何も入力せず変更ボタンを押すとエラーが表示される', async ({ page }) => {
-  // TODO: EmailPage POM を作成して使用
-  // Act: navigate() → save()
-  // Assert: エラーメッセージが表示される
+test('Q11: 必須情報が未入力の場合にエラーが表示される', async () => {
+  // Arrange: メールアドレス変更ページを開く
+  await emailPage.navigate();
+
+  // Act: 空欄のまま保存する
+  await emailPage.save();
+
+  // Assert: メールアドレスとパスワードの必須エラーを検証する
+  await expect(emailPage.newEmailError).toBeVisible();
+  await expect(emailPage.passwordError).toBeVisible();
 });
 
-// Q12: パスワードが間違っているとエラーが表示される
-test.fixme('Q12: パスワードが間違っているとエラーが表示される', async ({ page }) => {
-  // TODO: EmailPage POM を作成して使用
-  // Act: 正しいメールを入力し、間違ったパスワードで save()
-  // Assert: #email-password-wrong "パスワードが正しくありません" が表示される
+test('Q12: パスワードが間違っている場合にエラーが表示される', async () => {
+  // Arrange: メールアドレス変更ページを開く
+  await emailPage.navigate();
+
+  // Act: 有効なメールアドレスと誤ったパスワードで送信する
+  await emailPage.submitEmailChange('new@example.com', 'new@example.com', 'wrongpassword');
+
+  // Assert: パスワードエラーの内容を検証する
+  await expect(emailPage.incorrectPasswordError).toBeVisible();
+  await expect(emailPage.incorrectPasswordError).toContainText('パスワードが正しくありません');
 });
 
-// Q13: 新しいメールアドレスと確認用が一致しないとエラーが表示される
-test.fixme('Q13: メールアドレスが一致しないとエラーが表示される', async ({ page }) => {
-  // TODO: EmailPage POM を作成して使用
-  // Act: 異なるメールアドレスを入力して save()
-  // Assert: #email-confirm-error "メールアドレスが一致しません" が表示される
+test('Q13: メールアドレスが一致しない場合にエラーが表示される', async () => {
+  // Arrange: メールアドレス変更ページを開く
+  await emailPage.navigate();
+
+  // Act: 確認用と異なるメールアドレスを入力して送信する
+  await emailPage.submitEmailChange('new@example.com', 'different@example.com', 'password');
+
+  // Assert: 確認用メールアドレスのエラーを検証する
+  await expect(emailPage.confirmEmailError).toBeVisible();
+  await expect(emailPage.confirmEmailError).toContainText('メールアドレスが一致しません');
 });
 
-// Q14: 不正なメールアドレス形式だとエラーが表示される
-test.fixme('Q14: 不正なメールアドレス形式だとエラーが表示される', async ({ page }) => {
-  // TODO: EmailPage POM を作成して使用
-  // Act: "invalid-email" を入力して save()
-  // Assert: #email-new-error "正しいメールアドレスを入力してください" が表示される
+test('Q14: 不正なメールアドレス形式の場合にエラーが表示される', async () => {
+  // Arrange: メールアドレス変更ページを開く
+  await emailPage.navigate();
+
+  // Act: 不正な形式のメールアドレスを入力して送信する
+  await emailPage.submitEmailChange('invalid-email', 'invalid-email', 'password');
+
+  // Assert: メールアドレス形式のエラーを検証する
+  await expect(emailPage.newEmailError).toBeVisible();
+  await expect(emailPage.newEmailError).toContainText('正しいメールアドレスを入力してください');
 });
 
-// Q15: キャンセルボタンを押すと入力内容がクリアされる
-test.fixme('Q15: キャンセルボタンを押すと入力内容がクリアされる', async ({ page }) => {
-  // TODO: EmailPage POM を作成して使用
-  // Arrange: navigate() → フィールドに値を入力
-  // Act: cancel()
-  // Assert: 全フィールドが空になっていることを検証
+test('Q15: キャンセルすると入力内容がクリアされる', async () => {
+  // Arrange: メールアドレス変更ページを開いて入力する
+  await emailPage.navigate();
+  await emailPage.fillNewEmail('test@example.com');
+  await emailPage.fillConfirmEmail('test@example.com');
+  await emailPage.fillPassword('password');
+
+  // Act: 入力内容をキャンセルする
+  await emailPage.cancel();
+
+  // Assert: すべての編集可能な入力欄が空であることを検証する
+  await expect(emailPage.newEmailInput).toHaveValue('');
+  await expect(emailPage.confirmEmailInput).toHaveValue('');
+  await expect(emailPage.passwordInput).toHaveValue('');
 });
