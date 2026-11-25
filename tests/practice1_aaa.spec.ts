@@ -203,12 +203,11 @@ test('Q15: ジャンル「all」に戻すとテーブルが6件に戻る', async
   // TODO: AAA パターンでテストを書いてください
   // Hint: まず別のジャンルで絞り込んでから「all」に戻す
   // Arrange: （beforeEach でセットアップ済み）
-  // Act: ジャンルを「tech」で絞り込み
+  // Arrange: ジャンルを「tech」で絞り込み、2件になったことを確認
   await statsPage.filterByGenre('tech');
+  expect(await statsPage.getStatsRowCount()).toBe(2);
   // Act: ジャンルを「all」に戻す
   await statsPage.filterByGenre('all');
-  // Act: 絞り込み後の行数を取得
-  const count = await statsPage.getStatsRowCount();
   // Assert: 6件であることを検証
-  expect(count).toBe(6);
+  expect(await statsPage.getStatsRowCount()).toBe(6);
 });
