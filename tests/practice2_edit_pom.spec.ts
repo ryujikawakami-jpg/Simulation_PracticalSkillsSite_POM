@@ -13,6 +13,7 @@ let loginPage: LoginPage;
 let bookPage: BookPage;
 let bookModal: BookModal;
 
+
 test.beforeEach(async ({ page }) => {
   loginPage = new LoginPage(page);
   bookPage  = new BookPage(page);
@@ -116,64 +117,63 @@ test('Q6: 著者「高橋」で絞り込むと2件になる', async ({ page }) =
 
 // Q7: 著者・メモを入力して書籍を追加できる
 test('Q7: 著者・メモを入力して書籍を追加できる', async ({ page }) => {
-  // TODO: BookModal.selectAuthor() と BookModal.fillNote() を実装してから使用
+
   // Arrange: addBookButton をクリック
   await bookPage.clickAddBook();
-  
+
   // Act: タイトル、ジャンル、著者、メモを入力して保存
-  await bookModal.fillTitle();
+  await bookModal.fillTitle('ポケモン');
   await bookModal.selectGenre('fiction');
   await bookModal.selectAuthor('山田');
-  await bookModal.fillNote();
+  await bookModal.fillNote('マサラタウン');
   await bookModal.save();
+
   // Assert: 書籍数が7件になり、追加された書籍の著者とメモが一覧に表示されることを検証
+  expect(await bookPage.getBookCount()).toBe(7);
 
-expect(await bookPage.getBookCount()).toBe(7);
-
-expect(await bookPage.getBookTitle(7)).toBe('ポケモン');
-expect(await bookPage.getBookAuthor(7)).toContain('山田');
-expect(await bookPage.getBookNote(7)).toContain('マサラタウン');
+  expect(await bookPage.getBookTitle(7)).toBe('ポケモン');
+  expect(await bookPage.getBookAuthor(7)).toContain('山田');
+  expect(await bookPage.getBookNote(7)).toContain('マサラタウン');
 
 });
 
 // Q8: 評価・ページ数を設定して書籍を追加できる
 test('Q8: 評価・ページ数を設定して書籍を追加できる', async ({ page }) => {
-  // TODO: BookModal.selectRating() と BookModal.fillPages() を実装してから使用
 
   // Arrange: addBookButton をクリック
   await bookPage.clickAddBook();
 
   // Act: タイトル、評価、ページ数を入力して保存
-  await bookModal.fillTitle();
-  await bookModal.selectRating();
-  await bookModal.fillPages();
+  await bookModal.fillTitle('ハンターハンター');
+  await bookModal.selectRating(5);
+  await bookModal.fillPages('200');
   await bookModal.save();
 
   // Assert: 書籍数が7件になり、追加された書籍の評価とページ数が一覧に表示されることを検証
   expect(await bookPage.getBookCount()).toBe(7);
 
-  expect(await bookPage.getBookTitle(7)).toBe('ポケモン');
+  expect(await bookPage.getBookTitle(7)).toBe('ハンターハンター');
   expect(await bookPage.getBookRating(7)).toContain('★★★★★');
-  expect(await bookPage.getBookPages(7)).toContain('50');
+  expect(await bookPage.getBookPages(7)).toContain('200');
 
 });
 
 // Q9: ウィッシュリスト保存するとステータスが「未読」になる
 test('Q9: ウィッシュリスト保存するとステータスが「未読」になる', async ({ page }) => {
-  // TODO: BookModal.saveWishlist() を実装してから使用
 
   // Arrange: addBookButton をクリック
   await bookPage.clickAddBook();
 
   // Act: タイトルを入力して saveWishlist() で保存
-  await bookModal.fillTitle();
+  await bookModal.fillTitle('ドラゴンボール');
   await bookModal.saveWishlist();
 
   // Assert: 追加された書籍のステータスが「未読」であることを検証
   expect(await bookPage.getBookCount()).toBe(7);
 
-  expect(await bookPage.getBookTitle(7)).toBe('ポケモン');
+  expect(await bookPage.getBookTitle(7)).toBe('ドラゴンボール');
   expect(await bookPage.getBookStatus(7)).toContain('未読');
+
 });
 
 // Q10: ジャンル「tech」＋著者「山田」の組み合わせフィルター
@@ -205,50 +205,49 @@ test('Q11: 著者「unknown」で絞り込むと著者未設定の書籍が表�
 
 
   // Assert: 1件であることを検証（ワンピース100巻のみ）
-const count = await bookPage.getBookCount
+  const count = await bookPage.getBookCount();
+  expect(count).toBe(1);
 
 });
 
 // Q12: メモ付きで書籍を追加し、一覧でメモが表示される
 test('Q12: メモ付きで書籍を追加し、一覧でメモが表示される', async ({ page }) => {
-  // TODO: BookModal.fillNote() と BookPage.getBookNote() を実装してから使用
 
   // Arrange: addBookButton をクリック
   await bookPage.clickAddBook();
 
   // Act: タイトル・メモを入力して保存
-  await bookModal.fillTitle();
-  await bookModal.fillNote();
-
+  await bookModal.fillTitle('名探偵コナン');
+  await bookModal.fillNote('工藤真一');
   await bookModal.save();
+
   // Assert: 追加された書籍のメモが一覧に表示されることを検証
   const note = await bookPage.getBookNote(7);
-  expect(note).toContain('マサラタウン');
+
+  expect(note).toContain('工藤真一');
 
 });
 
 // Q13: 著者・評価・ページ数を全て設定して追加できる
 test('Q13: 著者・評価・ページ数を全て設定して追加できる', async ({ page }) => {
-  // TODO: BookModal の selectAuthor, selectRating, fillPages を全て実装してから使用
 
   // Arrange: addBookButton をクリック
   await bookPage.clickAddBook();
 
   // Act: タイトル、著者、評価、ページ数を入力して保存
-  await bookModal.fillTitle()
+  await bookModal.fillTitle('ガンダム');
   await bookModal.selectAuthor('山田');
-  await bookModal.selectRating();
-  await bookModal.fillPages();
+  await bookModal.selectRating(5);
+  await bookModal.fillPages('50');
   await bookModal.save();
 
   // Assert: 書籍数が7件になり、追加された書籍の著者・評価・ページ数が一覧に表示されることを検証
   expect(await bookPage.getBookCount()).toBe(7);
 
-  expect(await bookPage.getBookTitle(7)).toBe('ポケモン');
+  expect(await bookPage.getBookTitle(7)).toBe('ガンダム');
   expect(await bookPage.getBookAuthor(7)).toContain('山田');
   expect(await bookPage.getBookRating(7)).toContain('★★★★★');
   expect(await bookPage.getBookPages(7)).toContain('50');
-  
 
 });
 
@@ -269,20 +268,19 @@ test('Q14: 書籍名を空のまま保存するとエラーが表示される', 
 
 // Q15: ウィッシュリスト保存後、ステータスが「未読」で評価も保持される
 test('Q15: ウィッシュリスト保存後、ステータスが「未読」で評価も保持される', async ({ page }) => {
-  // TODO: BookModal.saveWishlist() と BookModal.selectRating() を実装してから使用
 
   // Arrange: addBookButton をクリック
   await bookPage.clickAddBook();
 
   // Act: タイトル・評価を入力して saveWishlist() で保存
-  await bookModal.fillTitle();
-  await bookModal.selectRating();
+  await bookModal.fillTitle('ナルト');
+  await bookModal.selectRating(5);
   await bookModal.saveWishlist();
 
   // Assert: ステータスが「未読」、評価が設定した値であることを検証
   expect(await bookPage.getBookCount()).toBe(7);
 
-  expect(await bookPage.getBookTitle(7)).toBe('ポケモン');
+  expect(await bookPage.getBookTitle(7)).toBe('ナルト');
   expect(await bookPage.getBookRating(7)).toContain('★★★★★');
   expect(await bookPage.getBookStatus(7)).toContain('未読');
 

@@ -53,7 +53,7 @@ export class BookModal {
 
   // --- 提供済みメソッド ---
 
-  async fillTitle(title: string = 'ポケモン') {
+  async fillTitle(title: string) {
     await this.titleInput.fill(title);
   }
 
@@ -87,19 +87,19 @@ export class BookModal {
 
   // TODO Q2: 評価を選択する（1〜5）
   // async selectRating(rating: number) { ... }
- async selectRating(rating: number = 5){
+ async selectRating(rating: number){
     await this.ratingSelect.selectOption(String(rating));
   }
  
   // TODO Q3: ページ数を入力する
   // async fillPages(pages: string) { ... }
-  async fillPages(pages: string = '50'){
+  async fillPages(pages: string){
     await this.pagesInput.fill(pages);
   }
 
   // TODO Q4: メモを入力する
   // async fillNote(note: string) { ... }
-  async fillNote(note: string = 'マサラタウン'){
+  async fillNote(note: string){
     await this.noteInput.fill(note);
   }
 
